@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+
+{% load static %}
+
+{% block title%} Контакт {% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Мои контакты</h2>
+</div>
+
+<div class="social-links">
+    <a href="https://t.me/mkrv_888" class="social-link telegram" target="_blank">
+       <img src="{% static 'main/images/tg.png' %}" width="50"> Telegram
+    </a>
+    
+    <a href="https://vk.com/makar_7777" class="social-link vk" target="_blank">
+        <img src="{% static 'main/images/vk.webp' %}" width="50"> VK
+    </a>
+    
+    <a href="https://github.com/podsvinok7" class="social-link github" target="_blank">
+        <img src="{% static 'main/images/gh.png' %}" width="50">GitHub
+    </a>
+</div>
+
+{% endblock %}

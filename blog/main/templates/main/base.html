@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Мой блог{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>
+                    <a href="{% url 'index' %}" class="logo-link">
+                        <img src="{% static 'main/images/logo.png' %}" alt="Логотип" class="logo-img">
+                        <span class="logo-text">Новостной блог</span>
+                    </a>
+                </h1>
+            </div>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="{% url 'index' %}">Главная</a></li>
+                    <li><a href="{% url 'news_list'%}">Новости</a></li>
+                    <li><a href="{% url 'about' %}">О мне</a></li>
+                    <li><a href="{% url 'contact' %}">Контакт</a></li>
+                    <li><a href="{% url 'feedback' %}">Обратная связь</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>2025 Новостной блог</p>
+        </div>
+    </footer>
+</body>
+</html>

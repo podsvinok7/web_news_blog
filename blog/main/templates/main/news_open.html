@@ -1,0 +1,23 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block content %}
+<article class="news-detail">
+    <div class="news-header">
+        <h1>{{ news.title }}</h1>
+        <div class="news-meta">
+            <span class="news-date">Опубликовано: {{ news.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+    </div>
+    
+    <div class="news-content">
+        {{ news.content|linebreaks }}
+    </div>
+    
+    <div class="news-footer">
+        <a href="{% url 'news_list' %}" class="btn-back">К списку новостей</a>
+    </div>
+</article>
+{% endblock %}

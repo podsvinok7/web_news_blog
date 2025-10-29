@@ -1,0 +1,26 @@
+{% extends "main/base.html" %}
+
+{% block title %}Новости{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Новости</h2>
+</div>
+
+<div class="news-container">
+    {% for news in news_list %}
+    <div class="news-item">
+        <h3 class="news-title">
+            <a href="{% url 'news_open' news.id %}">{{ news.title }}</a>
+        </h3>
+        <div class="news-meta">
+            <span class="news-date">{{ news.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        <div class="news-content">
+            {{ news.content|truncatewords:30 }}
+        </div>
+        <a href="{% url 'news_open' news.id %}" class="read-more">Открыть полностью</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Создать новость{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Создать новость</h2>
+</div>
+
+<div class="news-form-container">
+    <form method="post" class="news-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Заголовок</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error-list">
+                    {% for error in form.title.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.content.id_for_label }}">Содержание</label>
+            {{ form.content }}
+            {% if form.content.errors %}
+                <div class="error-list">
+                    {% for error in form.content.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group checkbox">
+            {{ form.is_published }}
+            <label for="{{ form.is_published.id_for_label }}">Опубликовать сразу</label>
+        </div>
+
+        <button type="submit" class="btn-submit">Опубликовать новость</button>
+    </form>
+</div>
+{% endblock %}
