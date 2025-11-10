@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<article style="max-width: 800px; margin: 0 auto;">
+    <div class="article-header" style="margin-bottom: 30px;">
+        <h1>{{ article.title }}</h1>
+        <div class="article-meta" style="color: #666; font-size: 0.9em;">
+            <span class="article-category">Категория: {{ article.get_category_display }}</span> | 
+            <span class="article-date">Опубликовано: {{ article.created_date|date:"d.m.Y H:i" }}</span> | 
+            <span class="article-author"> Автор: <a href="{% url 'author_articles' article.user.id %}" style="color: #667eea; text-decoration: none;"> 
+                {{ article.user.username }} </a>
+            </span>
+        </div>
+        
+        {% if user.is_authenticated and user == article.user %}
+        <div class="article-actions" style="margin-top: 15px;">
+            <a href="{% url 'edit_article' article.id %}" class="btn-edit" style="background: #007bff; color: white; padding: 8px 15px; border-radius: 3px; margin-right: 10px;">Редактировать</a>
+            <a href="{% url 'delete_article' article.id %}" class="btn-delete" style="background: #dc3545; color: white; padding: 8px 15px; border-radius: 3px;">Удалить</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div style="line-height: 1.6; font-size: 1.1em;">
+        {{ article.text|linebreaks }}
+    </div>
+</article>
+
+<div style="max-width: 800px; margin: 50px auto 0;">
+    <h3>Комментарии ({{ comments.count }})</h3>
+    
+    {% for comment in comments %}
+    <div class="comment" style="border: 1px solid #2b2828ff; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+        <div class="comment-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <strong>{{ comment.author_name }}</strong>
+            <small style="color: #4f4d4dff;">{{ comment.date|date:"d.m.Y H:i" }}</small>
+        </div>
+        <div>
+            {{ comment.text|linebreaks }}
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align: center; color: #666; padding: 20px;">Пока нет комментариев. Будьте первым!</p>
+    {% endfor %}
+
+    <div style="margin-top: 30px;">
+        <h4>Добавить комментарий</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 15px;">
+                <label for="{{ form.author_name.id_for_label }}">Ваше имя:</label>
+                {{ form.author_name }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label for="{{ form.text.id_for_label }}">Комментарий:</label>
+                {{ form.text }}
+            </div>
+            <button type="submit" class="btn-submit">Добавить комментарий</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

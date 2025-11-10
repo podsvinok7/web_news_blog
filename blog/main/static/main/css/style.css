@@ -125,6 +125,7 @@ body {
 }
 
 .features {
+
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
@@ -132,6 +133,7 @@ body {
 }
 
 .feature-card {
+
     background: white;
     padding: 2rem;
     border-radius: 8px;
@@ -170,6 +172,7 @@ body {
 
 
 .page-header {
+
     text-align: center;
     margin-bottom: 2rem;
     padding: 2rem 0;
@@ -307,6 +310,8 @@ body {
 }
 
 .btn-submit {
+
+
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
@@ -463,4 +468,172 @@ body {
     border: 1px solid red;
     white-space: nowrap;
     flex-shrink: 0;
+}
+
+/* Стили для страницы статей */
+.articles-header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.categories-filter {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.categories-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.category-btn {
+    background: white;
+    color: #495057;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 20px;
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.category-btn:hover,
+.category-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.article-actions {
+
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.no-articles {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.article-meta-extended {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.article-author {
+
+    color: #667eea;
+    font-weight: 500;
+}
+
+.article-category-badge {
+    background: #667eea;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.categories-minimal {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.category-links {
+  display: flex;
+  gap: 20px;
+}
+
+.link {
+  color: #666;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.link:hover {
+  color: #333;
+  border-bottom-color: #ccc;
+}
+
+.link.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  font-weight: bold;
+}
+
+.categories-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 6px 12px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tag:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.tag-primary {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.btn-submit {
+    background: #28a745; 
+    color: white; 
+    padding: 10px 20px; 
+    border-radius: 5px; 
+    cursor: pointer;
+}
+
+/* Стили для ссылки автора */
+.article-author-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.article-author-link:hover {
+    color: #5a6fd8;
+    text-decoration: underline;
 }

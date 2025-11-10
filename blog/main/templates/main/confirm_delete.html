@@ -1,0 +1,25 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Удалить статью{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Удалить статью</h2>
+</div>
+
+<div class="confirm-delete" style="text-align: center; padding: 40px;">
+    <h3>Вы уверены, что хотите удалить статью?</h3>
+    <div class="article-preview" style="border: 1px solid #ddd; padding: 20px; margin: 20px 0; border-radius: 5px;">
+        <h4>"{{ article.title }}"</h4>
+        <p><strong>Категория:</strong> {{ article.get_category_display }}</p>
+        <p><strong>Дата создания:</strong> {{ article.created_date|date:"d.m.Y H:i" }}</p>
+    </div>
+    
+    <form method="post" style="display: inline-block;">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete" style="background: #dc3545; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Да, удалить</button>
+    </form>
+    <a href="{% url 'articles_list' %}" class="btn-cancel" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Отмена</a>
+</div>
+{% endblock %}

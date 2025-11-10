@@ -1,6 +1,25 @@
 from django import forms
-from .models import Feedback
-from .models import News
+from .models import Feedback, News, Article, Comment
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['author_name', 'text']
+        widgets = {
+            'author_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'text', 'category']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 10}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 class NewsForm(forms.ModelForm):
     class Meta:

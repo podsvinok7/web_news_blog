@@ -21,10 +21,11 @@
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="{% url 'index' %}">Главная</a></li>
+                    <li><a href="{% url 'articles_list' %}">Статьи</a></li>
+                    <li><a href="{% url 'create_article' %}">Написать статью</a></li>
                     <li><a href="{% url 'news_list'%}">Новости</a></li>
-                    <li><a href="{% url 'about' %}">О мне</a></li>
-                    <li><a href="{% url 'contact' %}">Контакт</a></li>
-                    <li><a href="{% url 'feedback' %}">Обратная связь</a></li>
+                    <li><a href="{% url 'login' %}">Вход</a></li>
+                    <li><a href="{% url 'register' %}">Рега</a></li>
                 </ul>
             </nav>
         </div>
@@ -40,6 +41,13 @@
     <footer class="footer">
         <div class="container">
             <p>2025 Новостной блог</p>
+            <nav class="nav">
+                <ul class="nav-list" style = "justify-content: center; gap: 0rem;">
+                    <li><a href="{% url 'about' %}">О мне</a></li>
+                    <li><a href="{% url 'contact' %}">Контакт</a></li>
+                    <li><a href="{% url 'feedback' %}">Обратная связь</a></li>
+                </ul>
+            </nav>
         </div>
     </footer>
 </body>

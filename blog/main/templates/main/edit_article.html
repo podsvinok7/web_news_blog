@@ -1,0 +1,71 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Редактировать статью{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Редактировать статью</h2>
+</div>
+
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="article-form-container">
+    <form method="post" class="article-form">
+        {% csrf_token %}
+        
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="{{ form.title.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Заголовок</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="error-list" style="color: red; margin-top: 5px;">
+                    {% for error in form.title.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="{{ form.category.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Категория</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+                <div class="error-list" style="color: red; margin-top: 5px;">
+                    {% for error in form.category.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="{{ form.text.id_for_label }}" style="display: block; margin-bottom: 5px; font-weight: bold;">Текст статьи</label>
+            {{ form.text }}
+            {% if form.text.errors %}
+                <div class="error-list" style="color: red; margin-top: 5px;">
+                    {% for error in form.text.errors %}
+                        <span class="error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-actions" style="margin-top: 30px;">
+            <button type="submit" class="btn-submit" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Сохранить изменения</button>
+            <a href="{% url 'articles_list' %}" class="btn-cancel" style="background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Отмена</a>
+            
+            {% if article and article.id %}
+                <a href="{% url 'delete_article' article.id %}" class="btn-delete" style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-left: 10px;">Удалить статью</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}

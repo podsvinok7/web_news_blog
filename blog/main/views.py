@@ -1,9 +1,154 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import FeedbackForm, NewsForm
-from .models import Feedback
-from .models import News
-from django.shortcuts import get_object_or_404 
+from .forms import FeedbackForm, NewsForm, ArticleForm, CommentForm
+from .models import Feedback, News, Article
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+
+
+def articles_list(request, category=None):
+    if category:
+        articles = Article.objects.filter(category=category)
+        category_display = {
+            'technology': 'Технологии',
+            'science': 'Наука',
+            'art': 'Искусство', 
+            'sport': 'Спорт',
+            'general': 'Общее'
+        }
+        current_category = category_display.get(category, category)
+    else:
+        articles = Article.objects.all()
+        current_category = None
+    
+    articles = articles.order_by('-created_date')
+    
+    return render(request, 'main/author_articles.html', {
+        'articles': articles,
+        'current_category': current_category
+    })
+
+
+def author_articles(request, user_id):
+    """Страница со всеми статьями конкретного автора"""
+    author = get_object_or_404(User, id=user_id)
+    articles = Article.objects.filter(user=author)
+    
+    return render(request, 'main/author_articles.html', {
+        'articles': articles,
+        'author': author
+    })
+
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        
+        # Проверяем и username И email на уникальность
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Пользователь с таким именем уже существует')
+        elif User.objects.filter(email=email).exists():  # ← ДОБАВЬТЕ ЭТУ ПРОВЕРКУ
+            messages.error(request, 'Пользователь с таким email уже существует')
+        else:
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                email=email,
+            )
+            login(request, user)
+            messages.success(request, 'Регистрация прошла успешно!')
+    
+    return render(request, 'main/register.html')
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Вы вошли!')
+        else:
+            messages.error(request, 'Неверные данные')
+    
+    return render(request, 'main/login.html')
+
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'Logged out successfully!')
+    return redirect('articles_list')  # Исправлено имя URL
+
+def article_detail(request, id):
+    article = get_object_or_404(Article, id=id)
+    comments = article.comments.all()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.article = article
+            comment.save()
+            return redirect('article_detail', id=id)
+    else:
+        form = CommentForm()
+    
+    return render(request, 'main/article_detail.html', {
+        'article': article,
+        'comments': comments,
+        'form': form
+    })
+
+def articles_list(request, category=None):
+    # Всегда получаем статьи
+    if category:
+        articles = Article.objects.filter(category=category)
+    else:
+        articles = Article.objects.all()
+    
+    # Всегда возвращаем render
+    return render(request, 'main/articles_list.html', {
+        'articles': articles,
+        'current_category': category
+    })
+
+# УБЕРИТЕ ДУБЛИРУЮЩУЮСЯ ФУНКЦИЮ create_article И ОСТАВЬТЕ ТОЛЬКО ЭТУ:
+@login_required
+def create_article(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save()
+            return redirect('/articles/')  # ← Временное решение - прямой URL
+    else:
+        form = ArticleForm()
+    
+    return render(request, 'main/create_article.html', {'form': form})
+
+@login_required
+def edit_article(request, id):
+    article = get_object_or_404(Article, id=id, user=request.user)  # только свои статьи
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('articles_list')  # Исправлено имя URL
+    else:
+        form = ArticleForm(instance=article)
+    
+    return render(request, 'main/edit_article.html', {'form': form})  # Добавлен возврат response
+
+@login_required
+def delete_article(request, id):
+    article = get_object_or_404(Article, id=id, user=request.user)  # только свои статьи
+    if request.method == 'POST':
+        article.delete()
+        return redirect('articles_list')  # Исправлено имя URL
+    return render(request, 'main/confirm_delete.html', {'article': article})
 
 def news_list(request):
     news = News.objects.filter(is_published=True).order_by('-created_at')
