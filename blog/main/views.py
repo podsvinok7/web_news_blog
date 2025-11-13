@@ -5,7 +5,44 @@ from .models import Feedback, News, Article
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Article, Comment
+from .serializers import ArticleSerializer, CommentSerializer
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
+
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['category']
+    ordering_fields = ['created_date', 'title']  # Изменено с 'date' на 'created_date'
+    ordering = ['-created_date']  # По умолчанию новые первые
+    
+    # Фильтрация по категории
+    @action(detail=False, methods=['get'], url_path='category/(?P<category_name>[^/.]+)')
+    def filter_by_category(self, request, category_name=None):
+        articles = self.queryset.filter(category=category_name)
+        serializer = self.get_serializer(articles, many=True)
+        return Response(serializer.data)
+    
+    # Сортировка по дате
+    @action(detail=False, methods=['get'], url_path='sort/(?P<sort_field>[^/.]+)')
+    def sort_by_field(self, request, sort_field=None):
+        if sort_field == 'date':
+            # Сортировка по created_date
+            articles = self.queryset.order_by('-created_date')
+        else:
+            articles = self.queryset.order_by(sort_field)
+        serializer = self.get_serializer(articles, many=True)
+        return Response(serializer.data)
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    filter_backends = [DjangoFilterBackend]
 
 def articles_list(request, category=None):
     if category:
