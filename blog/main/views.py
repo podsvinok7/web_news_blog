@@ -5,12 +5,37 @@ from .models import Feedback, News, Article
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source='user.username', read_only=True)
+
+    class Meta:
+        model = Article
+        fields = ['id', 'title', 'text', 'category', 'created_date', 'author']
+        read_only_fields = ['id', 'created_date', 'author']
+        
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['category']
+    ordering_fields = ['created_date', 'title']
+    ordering = ['-created_date']
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -18,21 +43,25 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['category']
-    ordering_fields = ['created_date', 'title']  # Изменено с 'date' на 'created_date'
-    ordering = ['-created_date']  # По умолчанию новые первые
+    ordering_fields = ['created_date', 'title']
+    ordering = ['-created_date']
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
     
-    # Фильтрация по категории
     @action(detail=False, methods=['get'], url_path='category/(?P<category_name>[^/.]+)')
     def filter_by_category(self, request, category_name=None):
         articles = self.queryset.filter(category=category_name)
         serializer = self.get_serializer(articles, many=True)
         return Response(serializer.data)
-    
-    # Сортировка по дате
+
     @action(detail=False, methods=['get'], url_path='sort/(?P<sort_field>[^/.]+)')
     def sort_by_field(self, request, sort_field=None):
         if sort_field == 'date':
-            # Сортировка по created_date
             articles = self.queryset.order_by('-created_date')
         else:
             articles = self.queryset.order_by(sort_field)
@@ -43,6 +72,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
+    permission_classes = [IsAuthenticated]
 
 def articles_list(request, category=None):
     if category:
@@ -68,7 +98,6 @@ def articles_list(request, category=None):
 
 
 def author_articles(request, user_id):
-    """Страница со всеми статьями конкретного автора"""
     author = get_object_or_404(User, id=user_id)
     articles = Article.objects.filter(user=author)
     
@@ -83,10 +112,9 @@ def register(request):
         password = request.POST['password']
         email = request.POST['email']
         
-        # Проверяем и username И email на уникальность
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Пользователь с таким именем уже существует')
-        elif User.objects.filter(email=email).exists():  # ← ДОБАВЬТЕ ЭТУ ПРОВЕРКУ
+        elif User.objects.filter(email=email).exists():
             messages.error(request, 'Пользователь с таким email уже существует')
         else:
             user = User.objects.create_user(
@@ -115,8 +143,8 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    messages.success(request, 'Logged out successfully!')
-    return redirect('articles_list')  # Исправлено имя URL
+    messages.success(request, 'Вы вышли из аккаунта')
+    return redirect('login')
 
 def article_detail(request, id):
     article = get_object_or_404(Article, id=id)
@@ -139,19 +167,16 @@ def article_detail(request, id):
     })
 
 def articles_list(request, category=None):
-    # Всегда получаем статьи
     if category:
         articles = Article.objects.filter(category=category)
     else:
         articles = Article.objects.all()
     
-    # Всегда возвращаем render
     return render(request, 'main/articles_list.html', {
         'articles': articles,
         'current_category': category
     })
 
-# УБЕРИТЕ ДУБЛИРУЮЩУЮСЯ ФУНКЦИЮ create_article И ОСТАВЬТЕ ТОЛЬКО ЭТУ:
 @login_required
 def create_article(request):
     if request.method == 'POST':
@@ -160,7 +185,7 @@ def create_article(request):
             article = form.save(commit=False)
             article.user = request.user
             article.save()
-            return redirect('/articles/')  # ← Временное решение - прямой URL
+            return redirect('/articles/')
     else:
         form = ArticleForm()
     
@@ -168,23 +193,23 @@ def create_article(request):
 
 @login_required
 def edit_article(request, id):
-    article = get_object_or_404(Article, id=id, user=request.user)  # только свои статьи
+    article = get_object_or_404(Article, id=id, user=request.user)
     if request.method == 'POST':
         form = ArticleForm(request.POST, instance=article)
         if form.is_valid():
             form.save()
-            return redirect('articles_list')  # Исправлено имя URL
+            return redirect('articles_list')
     else:
         form = ArticleForm(instance=article)
     
-    return render(request, 'main/edit_article.html', {'form': form})  # Добавлен возврат response
+    return render(request, 'main/edit_article.html', {'form': form})
 
 @login_required
 def delete_article(request, id):
-    article = get_object_or_404(Article, id=id, user=request.user)  # только свои статьи
+    article = get_object_or_404(Article, id=id, user=request.user)
     if request.method == 'POST':
         article.delete()
-        return redirect('articles_list')  # Исправлено имя URL
+        return redirect('articles_list')
     return render(request, 'main/confirm_delete.html', {'article': article})
 
 def news_list(request):

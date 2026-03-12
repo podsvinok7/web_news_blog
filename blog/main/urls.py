@@ -1,7 +1,13 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from . import views
 
+router = routers.DefaultRouter()
+router.register(r'articles', views.ArticleViewSet)
+router.register(r'comments', views.CommentViewSet)
+
 urlpatterns = [
+    path('api/', include(router.urls)),
     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),

@@ -1,0 +1,330 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Общий контейнер */
+
+.App {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+/* Шапка */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  background: #111827;
+  color: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.header a {
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.header a:hover {
+  text-decoration: underline;
+}
+
+.header nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.header button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #f91616;
+  color: #111827;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.header button:hover {
+  background: #fb923c;
+}
+
+/* Карточки статей */
+
+.articles {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.articles h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.article-card {
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+}
+
+.article-card h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.article-card a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.article-card a:hover {
+  text-decoration: underline;
+}
+
+.article-card p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 14px;
+}
+
+/* Страница статьи */
+
+.article-page {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px 20px 22px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.article-page a {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.article-page a:hover {
+  text-decoration: underline;
+}
+
+.article-page h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.article-page p {
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* Форма логина */
+
+.login {
+  max-width: 380px;
+  margin: 80px auto;
+  padding: 22px 24px 26px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.18);
+}
+
+.login h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  outline: none;
+}
+
+.login input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+.login button {
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: #f9fafb;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.login button:hover {
+  background: #1d4ed8;
+}
+
+/* Сообщения об ошибках */
+
+.error {
+  margin-top: 8px;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+/* Адаптив */
+
+@media (max-width: 640px) {
+  .App {
+    padding: 16px 10px 32px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .login {
+    margin: 40px 12px;
+  }
+}
+
+/* Контейнер формы статьи */
+.article-form {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 24px 28px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+}
+
+/* Заголовок страницы */
+.article-form h1 {
+  margin: 0 0 20px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Лейблы */
+.article-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Инпут и textarea */
+.article-form input[type="text"],
+.article-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 44px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.article-form textarea {
+  min-height: 180px;
+}
+
+.article-form input[type="text"]:focus,
+.article-form textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb22;
+}
+
+/* Блок кнопок */
+.article-form__actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+/* Кнопка Сохранить */
+.article-form__actions .btn-primary {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.article-form__actions .btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.article-form__actions .btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Кнопка Отмена */
+.article-form__actions .btn-secondary {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.article-form__actions .btn-secondary:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Сообщение об ошибке */
+.article-form__error {
+  margin-top: 16px;
+  color: #b91c1c;
+  font-size: 14px;
+}

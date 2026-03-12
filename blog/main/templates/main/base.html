@@ -22,10 +22,17 @@
                 <ul class="nav-list">
                     <li><a href="{% url 'index' %}">Главная</a></li>
                     <li><a href="{% url 'articles_list' %}">Статьи</a></li>
-                    <li><a href="{% url 'create_article' %}">Написать статью</a></li>
-                    <li><a href="{% url 'news_list'%}">Новости</a></li>
-                    <li><a href="{% url 'login' %}">Вход</a></li>
-                    <li><a href="{% url 'register' %}">Рега</a></li>
+                    <li><a href="{% url 'news_list' %}">Новости</a></li>
+        
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'create_article' %}">Создать статью</a></li>
+                        <li>
+                            <a href="{% url 'logout' %}" class="btn-logout">Выход</a>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Вход</a></li>
+                        <li><a href="{% url 'register' %}">Регистрация</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

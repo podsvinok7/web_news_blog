@@ -3,8 +3,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
-
-
 class Article(models.Model):
     CATEGORY_CHOICES = [
         ('technology', 'Технологии'),
@@ -17,7 +15,7 @@ class Article(models.Model):
     title = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')  # Встроенный User
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
     category = models.CharField(
         max_length=50, 
         choices=CATEGORY_CHOICES, 
